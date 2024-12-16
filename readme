@@ -1,0 +1,22 @@
+Admin side:
+able to perform crud operations of stocks
+able to manage revenue and profit
+
+user side:
+able to buy and sell stock
+able to add funds
+able to withdraw funds
+able to watch stock
+able to view portfolio
+
+Number of apps:3
+Admin
+user
+authentication
+
+tables:
+stocks
+users
+payment
+funds
+portfolio
