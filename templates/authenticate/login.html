@@ -3,25 +3,30 @@
 
 
 {% block content %}
-
-<div class="container">
-    <form class="row" method="post">
-        {% csrf_token %}
-        <div class="col-12 mb-5 fs-3 fw-bolder">
-            Login to MoneyMint
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">Enter your email</label>
-            <input type="email" class="form-control" id="username" name="username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Login</button>
-        </div>
-    </form>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center mb-4">Sign In</h2>
+        <form class="row" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="email" class="form-label">Enter your email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="mb-3">
+                <label for="userType" class="form-label">Sign In As</label>
+                <select class="form-select" id="userType" name="userType" required>
+                    <option value="">Select an option</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        </form>
+    </div>
 </div>
 
 {% endblock content %}
