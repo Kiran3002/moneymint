@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center mb-4">Add Stock</h2>
+        <form method="POST" class="shadow p-4 rounded bg-light">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="symbol" class="form-label">Stock Symbol</label>
+                <input type="text" id="symbol" name="symbol" class="form-control" placeholder="Enter stock symbol" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Stock Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter stock name" required>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Stock Price</label>
+                <input type="number" id="price" name="price" class="form-control" placeholder="Enter stock price" step="0.01" required>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" id="date" name="date" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add Stock</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

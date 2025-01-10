@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authe',
     'user',
+    'admin_dashboard',
 ]
 
 MIDDLEWARE = [

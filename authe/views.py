@@ -63,11 +63,10 @@ def Login_auth(request):
             if not check_password(raw_password, user.password):
                 return HttpResponse("Invalid email or password.", status=401)
 
-            # Set user role and redirect based on role
-            if user.role == 'admin':
-                return redirect('user_dashboard')  # Redirect to admin dashboard
+            if user.role == 'Admin':
+                return redirect('user_dashboard')  
             elif user.role == 'user':
-                return redirect('user_dashboard')  # Redirect to user dashboard
+                return redirect('user_dashboard')  
 
         except Exception as e:
             return HttpResponse(f"An error occurred: {str(e)}", status=500)
