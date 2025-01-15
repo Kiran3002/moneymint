@@ -1,8 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    
+<div class="container py-5">
+    <h1 class="text-center mb-4">Available Stocks</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Latest Price</th>
+                    <th>Last Updated</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>Rs.{{ stock.latest_price }}</td>
+                    <td>{{ stock.last_updated }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'buy_stock' stock.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Buy</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No stocks available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-
-{% endblock %}
+{% endblock content %}

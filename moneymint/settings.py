@@ -70,9 +70,14 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'authe.auth_backends.UserRegistrationBackend',
+]
 WSGI_APPLICATION = 'moneymint.wsgi.application'
 
-
+SESSION_COOKIE_AGE = 3600  # Session expires after 1 hour
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -125,6 +130,7 @@ STATICFILES_DIRS =[
 MEDIA_URL='media/'
 MEDIA_ROOT = BASE_DIR/'media'
 
+LOGIN_URL = '/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

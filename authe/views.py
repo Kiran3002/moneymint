@@ -21,7 +21,6 @@ def Register_auth(request):
             address = request.POST['address']
             role = request.POST.get('role', 'user')  # Default role is 'user'
 
-            # Check if email or unique fields already exist
             if UserRegistration.objects.filter(email=email).exists():
                 return HttpResponse("Email is already registered.", status=400)
             if UserRegistration.objects.filter(aadhar=aadhar).exists():
@@ -47,27 +46,41 @@ def Register_auth(request):
             return HttpResponse(f"An error occurred: {str(e)}", status=500)
 
     return render(request, 'authenticate/register.html')
+from django.contrib.auth import login
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.contrib.auth.hashers import check_password
+from .models import UserRegistration
+from django.utils.timezone import now
+
 def Login_auth(request):
     if request.method == 'POST':
         try:
-            # Extract data from the form
-            email = request.POST['email']
-            raw_password = request.POST['password']
-
-            # Find user by email
+            email = request.POST.get('email')
+            raw_password = request.POST.get('password')
+            
+            # Check if the user exists
             user = UserRegistration.objects.filter(email=email).first()
-            if user is None:
+            if user is None or not check_password(raw_password, user.password):
                 return HttpResponse("Invalid email or password.", status=401)
+            
+            # Update the last login time
+            user.last_login = now()
+            user.save()
 
-            # Check password
-            if not check_password(raw_password, user.password):
-                return HttpResponse("Invalid email or password.", status=401)
+            # Set the backend explicitly
+            user.backend = 'authe.auth_backends.UserRegistrationBackend'
 
-            if user.role == 'Admin':
-                return redirect('user_dashboard')  
+            # Log the user in (establish session)
+            login(request, user)
+
+            # Redirect based on user role
+            if user.role == 'admin':
+                return redirect('admin_dashboard')  # Replace with the correct URL name for admin dashboard
             elif user.role == 'user':
-                return redirect('user_dashboard')  
+                return redirect('user_dashboard')  # Replace with the correct URL name for user dashboard
 
         except Exception as e:
             return HttpResponse(f"An error occurred: {str(e)}", status=500)
+
     return render(request, 'authenticate/login.html')

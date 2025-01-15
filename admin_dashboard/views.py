@@ -42,17 +42,15 @@ def update_all_stock_prices(request):
             all_stocks = Stock.objects.all()
 
             for stock in all_stocks:
-                # Generate a random price change
                 price_change = Decimal(random.uniform(-10, 10))
                 new_price = max(Decimal(0), stock.latest_price + price_change)  # Ensure non-negative price
 
-                # Update stock
                 stock.latest_price = new_price
                 stock.last_updated = date.today()
                 stock.save()
 
-            return redirect('add_or_update_stock')  # Redirect to a desired page
+            return redirect('add_or_update_stock')  
         except Exception as e:
             return HttpResponse(f"An error occurred: {e}", status=500)
 
-    return redirect('add_or_update_stock')  # Redirect if accessed via GET
+    return redirect('add_or_update_stock')  
