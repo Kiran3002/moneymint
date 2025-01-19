@@ -19,11 +19,19 @@ class Payment(models.Model):
     
 
 class Transaction(models.Model):
+    TRANSACTION_TYPES = [
+        ('buy', 'Buy'),
+        ('sell', 'Sell'),
+    ]
+
     user = models.ForeignKey(UserRegistration, on_delete=models.CASCADE, related_name="transactions")
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name="transactions")
     quantity = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=4, choices=TRANSACTION_TYPES,default='buy')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.first_name} - {self.stock.name} ({self.quantity} units)"
+        return f"{self.user.first_name} - {self.stock.name} ({self.quantity} units, {self.transaction_type})"
+
+

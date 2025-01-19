@@ -57,7 +57,8 @@ def buy_stock(request, stock_id):
             user=user,
             stock=stock,
             quantity=quantity,
-            total_price=total_price
+            total_price=total_price,
+            transaction_type="buy"
         )
 
         messages.success(
@@ -127,3 +128,96 @@ def payment(request):
 
     # Render the payment page
     return render(request, 'user/payment.html', {'user': user, 'payments': payments})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.db.models import Sum, F, DecimalField
+from .models import UserRegistration, Transaction, Stock
+@login_required
+def portfolio(request):
+    """
+    Renders the portfolio of the logged-in user, showing holdings and profit/loss.
+    """
+    user = request.user
+    holdings = (
+        Transaction.objects.filter(user=user, transaction_type='buy')
+        .values('stock__symbol', 'stock__name', 'stock__latest_price')
+        .annotate(
+            total_quantity=Sum('quantity'),
+            total_invested=Sum(F('total_price')),
+            avg_price=Sum(F('total_price')) / Sum(F('quantity')),
+        )
+        .filter(total_quantity__gt=0)
+    )
+    
+    for holding in holdings:
+        holding['current_value'] = holding['total_quantity'] * holding['stock__latest_price']
+        holding['profit_loss'] = holding['current_value'] - holding['total_invested']
+        holding['percent_change'] = (holding['profit_loss'] / holding['total_invested']) * 100 if holding['total_invested'] > 0 else 0
+
+    total_profit_loss = sum(h['profit_loss'] for h in holdings)
+
+    return render(request, 'user/portfolio.html', {'holdings': holdings,'total_profit_loss': total_profit_loss})
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from decimal import Decimal
+from .models import Stock, UserRegistration, Transaction
+
+@login_required
+def sell_stock(request, stock_symbol):
+    """
+    Handles selling of a stock by the user.
+    """
+    # Get the logged-in user
+    user = request.user
+
+    # Fetch the stock and user's transactions for that stock
+    stock = get_object_or_404(Stock, symbol=stock_symbol)
+    transactions = Transaction.objects.filter(user=user, stock=stock, transaction_type='buy')
+
+    if request.method == "POST":
+        try:
+            # Validate the quantity entered by the user
+            sell_quantity = int(request.POST.get('quantity', 0))
+            if sell_quantity <= 0:
+                raise ValueError("Quantity must be greater than zero.")
+        except ValueError:
+            messages.error(request, "Invalid quantity entered.")
+            return redirect('sell_stock', stock_symbol=stock_symbol)
+
+        # Calculate the total quantity owned by the user
+        total_quantity = transactions.aggregate(total=Sum('quantity'))['total'] or 0
+        if sell_quantity > total_quantity:
+            messages.error(request, "You cannot sell more than you own.")
+            return redirect('sell_stock', stock_symbol=stock_symbol)
+
+        # Calculate total price for the sale
+        total_sale_price = Decimal(sell_quantity) * stock.latest_price
+
+        # Create a new 'sell' transaction
+        Transaction.objects.create(
+            user=user,
+            stock=stock,
+            quantity=sell_quantity,
+            total_price=total_sale_price,
+            transaction_type='sell'
+        )
+
+        # Add the sale amount to the user's funds
+        user.funds += total_sale_price
+        user.save()
+
+        messages.success(
+            request,
+            f"Successfully sold {sell_quantity} units of {stock.name} for ₹{total_sale_price:.2f}."
+        )
+        return redirect('portfolio')
+
+    # Calculate the total quantity of the stock owned by the user
+    total_quantity = transactions.aggregate(total=Sum('quantity'))['total'] or 0
+
+    # Render the sell stock page
+    return render(request, 'user/sell_stock.html', {
+        'stock': stock,
+        'total_quantity': total_quantity
+    })

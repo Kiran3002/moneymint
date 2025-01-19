@@ -21,15 +21,26 @@
             <!-- Right Section -->
             <div class="float-end mb-3">
               {% if user.is_authenticated %}
-                <span class="me-3">Welcome, {{ user.first_name }}!</span>
-                
+                  <span class="me-3">Welcome, {{ user.first_name }}!</span>
+                  {% if user.role == "admin" %}
+                  <form method="POST" action="{% url 'update_stock' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary me-3">Update Stocks</button>
+                  </form>
+                  {% endif %}
+                  <a href="{% url 'logout' %}" class="text-decoration-none me-3">
+                      <i class="fa-solid fa-sign-out"></i>
+                      Logout
+                  </a>
+                  
               {% else %}
-                <a href="{% url 'login' %}" class="text-decoration-none me-3">
-                  <i class="fa-solid fa-sign-in"></i>
-                  Login
-                </a>
+                  <a href="{% url 'login' %}" class="text-decoration-none me-3">
+                      <i class="fa-solid fa-sign-in"></i>
+                      Login
+                  </a>
               {% endif %}
-            </div>
+          </div>
+          
           </div>
         </div>
       </div>

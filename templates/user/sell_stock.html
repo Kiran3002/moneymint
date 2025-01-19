@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    <div class="container my-5">
+        <h1 class="text-center text-primary mb-4">
+            Sell <strong>{{ stock.name }}</strong> ({{ stock.symbol }})
+        </h1>
+        <div class="card shadow-lg p-4">
+            <div class="mb-3">
+                <p><strong>Current Price:</strong> ₹{{ stock.latest_price|floatformat:2 }}</p>
+                <p><strong>Total Quantity Owned:</strong> {{ total_quantity }}</p>
+            </div>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="quantity" class="form-label">Quantity to Sell:</label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        id="quantity" 
+                        name="quantity" 
+                        min="1" 
+                        max="{{ total_quantity }}" 
+                        placeholder="Enter quantity"
+                        required
+                    >
+                    <small class="text-muted">You can sell up to {{ total_quantity }} units.</small>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-money-bill-wave"></i> Sell Stock
+                    </button>
+                    <a href="{% url 'portfolio' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Portfolio
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+{% endblock content %}

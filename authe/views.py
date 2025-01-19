@@ -76,7 +76,7 @@ def Login_auth(request):
 
             # Redirect based on user role
             if user.role == 'admin':
-                return redirect('admin_dashboard')  # Replace with the correct URL name for admin dashboard
+                return redirect('add_stocks')  # Replace with the correct URL name for admin dashboard
             elif user.role == 'user':
                 return redirect('user_dashboard')  # Replace with the correct URL name for user dashboard
 
@@ -84,3 +84,14 @@ def Login_auth(request):
             return HttpResponse(f"An error occurred: {str(e)}", status=500)
 
     return render(request, 'authenticate/login.html')
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+@login_required
+def logout_view(request):
+    """
+    Custom view to handle user logout.
+    """
+    logout(request)
+    messages.success(request, "You have successfully logged out.")
+    return redirect('login')
