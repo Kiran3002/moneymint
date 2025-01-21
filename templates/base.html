@@ -7,45 +7,66 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MoneyMint</title>
+    <title>MoneyMint</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+      body {
+        background-image: url('static/Images/Base4.jpg'); background-size: cover; background-repeat: no-repeat; 
+        background-attachment: fixed; background-position: center; width: 97.69vw; height: 97.69vh;
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
-      <div class="row m-0 bg-light">
+    <div class="col-12" style="margin-bottom: 4px;">
+      <div class="row bg-light" style="width: 1548px; padding-left: 20px; box-sizing: border-box; margin-bottom: 1px;">
         <div class="col-12">
-          <div class="text-center mt-3">
-            <strong>MoneyMint</strong>
-            
-
-            <!-- Right Section -->
-            <div class="float-end mb-3">
-              {% if user.is_authenticated %}
-                  <span class="me-3">Welcome, {{ user.first_name }}!</span>
-                  {% if user.role == "admin" %}
-                  <form method="POST" action="{% url 'update_stock' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary me-3">Update Stocks</button>
-                  </form>
-                  {% endif %}
-                  <a href="{% url 'logout' %}" class="text-decoration-none me-3">
-                      <i class="fa-solid fa-sign-out"></i>
-                      Logout
-                  </a>
+          <div class="mt-3" style="width: 1490px;" >
+            <nav class="navbar" style="margin-top: -15px;">
+              <div class="navbar-brand">
+                  <a href="{% url 'login' %}" class="btn"><strong style="font-size: 27px; font-family: Garamond;">MONEYMINT</strong></a>
+              </div>
+              {% if user.role == "user" %}
+              <div class="navbar-menu">
+                  <a href="{% url 'user_dashboard' %}" class="btn">Home</a>
+                  <a href="{% url 'stock_list' %}" class="btn">Stocks</a>
+                  <a href="{% url 'portfolio' %}" class="btn">Portfolio</a>
+                  <a href="{% url 'payment' %}" class="btn">Payments</a>
+              </div>
+              {% else %}
+              <div class="navbar-menu">
+                <a href="{% url 'revenue' %}" class="btn">Admin Dashboard</a>
+                <a href="{% url 'add_stocks' %}" class="btn">Add Stocks</a>
+                <a href="{% url 'stock_list' %}" class="btn">Stocks</a>
+            </div>
+            {% endif %}
+              <div class="navbar-auth">
+                {% if user.is_authenticated %}
+  <div class="d-flex align-items-center">
+    <span class="me-3">Welcome, {{ user.first_name }}!</span>
+    {% if user.role == "admin" %}
+      <form method="POST" action="{% url 'update_stock' %}" class="mb-0">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary me-3">Update Stocks</button>
+      </form>
+    {% endif %}
+    <a href="{% url 'logout' %}" class="text-decoration-none me-3 d-flex align-items-center">
+      <i class="fa-solid fa-sign-out me-1"></i>
+      Logout
+    </a>
+  </div>
                   
               {% else %}
-                  <a href="{% url 'login' %}" class="text-decoration-none me-3">
-                      <i class="fa-solid fa-sign-in"></i>
-                      Login
-                  </a>
+                  
               {% endif %}
-          </div>
-          
+              </div>
+          </nav>
           </div>
         </div>
       </div>
     </div>
     {% block content %}
+    
     
     {% endblock content %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

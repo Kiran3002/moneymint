@@ -2,39 +2,61 @@
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="text-center mb-4">Available Stocks</h1>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Symbol</th>
-                    <th>Name</th>
-                    <th>Latest Price</th>
-                    <th>Last Updated</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for stock in stocks %}
-                <tr>
-                    <td>{{ stock.symbol }}</td>
-                    <td>{{ stock.name }}</td>
-                    <td>Rs.{{ stock.latest_price }}</td>
-                    <td>{{ stock.last_updated }}</td>
-                    <td>
-                        <form method="POST" action="{% url 'buy_stock' stock.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">Buy</button>
-                        </form>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No stocks available.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Header -->
+    <div class="text-center mb-5">
+        {% if user.role == "user" %}
+        <h1 class="display-5 text-primary fw-bold">Available Stocks</h1>
+        {% else %}
+        <h1 class="display-5 text-primary fw-bold">Added Stocks</h1>
+        {% endif %}
+    </div>
+
+    <!-- Stocks Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th class="text-uppercase">Symbol</th>
+                            <th class="text-uppercase">Name</th>
+                            <th class="text-uppercase">Latest Price</th>
+                            <th class="text-uppercase">Last Updated</th>
+                            {% if user.role == "user" %}
+                            <th class="text-uppercase">Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stocks %}
+                            {% for stock in stocks %}
+                            <tr>
+                                <td class="text-center">{{ stock.symbol }}</td>
+                                <td class="text-center">{{ stock.name }}</td>
+                                <td class="text-center text-success">₹{{ stock.latest_price }}</td>
+                                <td class="text-center text-muted">{{ stock.last_updated }}</td>
+                                {% if user.role == "user" %}
+                                <td class="text-center">
+                                    <form method="POST" action="{% url 'buy_stock' stock.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary btn-sm">Buy</button>
+                                    </form>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="{% if user.role == 'user' %}5{% else %}4{% endif %}" class="text-center text-muted">
+                                    No stocks available.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+
 {% endblock content %}

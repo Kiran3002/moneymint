@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <body>
+        <div class="container my-5">
+            <h1 class="text-center mb-4">Admin Dashboard</h1>
+            
+            <!-- Overview Cards -->
+            <div class="row mb-5">
+                <div class="col-md-3">
+                    <div class="card text-center shadow">
+                        <div class="card-body">
+                            <h5>Total Revenue</h5>
+                            <p class="h4 text-success">₹{{ total_revenue|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center shadow">
+                        <div class="card-body">
+                            <h5>Total Transactions</h5>
+                            <p class="h4">{{ total_transactions }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center shadow">
+                        <div class="card-body">
+                            <h5>Total User Funds</h5>
+                            <p class="h4 text-primary">₹{{ total_user_funds|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center shadow">
+                        <div class="card-body">
+                            <h5>Total Users</h5>
+                            <p class="h4">{{ total_users }}</p>
+                            <small>Admins: {{ total_admins }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Payment Analysis -->
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header">Total Deposits</div>
+                        <div class="card-body">
+                            <p class="h4 text-success">₹{{ total_deposits|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header">Total Withdrawals</div>
+                        <div class="card-body">
+                            <p class="h4 text-danger">₹{{ total_withdrawals|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Recent Transactions -->
+            <div class="card shadow">
+                <div class="card-header">Recent Transactions</div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Stock</th>
+                                <th>Quantity</th>
+                                <th>Type</th>
+                                <th>Total Price</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in recent_transactions %}
+                            <tr>
+                                <td>{{ transaction.user.first_name }}</td>
+                                <td>{{ transaction.stock.name }}</td>
+                                <td>{{ transaction.quantity }}</td>
+                                <td>{{ transaction.transaction_type }}</td>
+                                <td>₹{{ transaction.total_price|floatformat:2 }}</td>
+                                <td>{{ transaction.timestamp }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No recent transactions found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+    </body>
+
+    
+{% endblock content %}

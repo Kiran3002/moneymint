@@ -28,7 +28,7 @@ def add_or_update_stock(request):
             stock.last_updated = date.today()
             stock.save()
 
-        return redirect('user_dashboard')  # Redirect back to the form
+        return redirect('stock_list')  # Redirect back to the form
 
     return render(request, 'admin/add_stocks.html')
 
@@ -70,3 +70,54 @@ def update_all_stock_prices(request):
             return HttpResponse(f"An error occurred: {e}", status=500)
 
     return redirect('add_stocks')
+
+
+from django.shortcuts import render
+from django.db.models import Sum, Count, F
+from user.models import Payment, Transaction
+from authe.models import UserRegistration
+
+def revenue(request):
+    """
+    Admin dashboard for viewing website revenue, transactions, and user statistics.
+    """
+    # Total revenue from buy transactions
+    total_revenue = Transaction.objects.filter(transaction_type='buy').aggregate(
+        revenue=Sum('total_price')
+    )['revenue'] or 0
+
+    # Total number of transactions
+    total_transactions = Transaction.objects.count()
+
+    # Total funds in user wallets
+    total_user_funds = UserRegistration.objects.aggregate(
+        total_funds=Sum('funds')
+    )['total_funds'] or 0
+
+    # User statistics
+    total_users = UserRegistration.objects.filter(role='user').count()
+    total_admins = UserRegistration.objects.filter(role='admin').count()
+
+    # Payment analysis
+    total_deposits = Payment.objects.filter(payment_type='add').aggregate(
+        total=Sum('amount')
+    )['total'] or 0
+    total_withdrawals = Payment.objects.filter(payment_type='withdraw').aggregate(
+        total=Sum('amount')
+    )['total'] or 0
+
+    # Recent transactions (limit to 10)
+    recent_transactions = Transaction.objects.order_by('-timestamp')[:10]
+
+    # Pass data to the template
+    context = {
+        'total_revenue': total_revenue,
+        'total_transactions': total_transactions,
+        'total_user_funds': total_user_funds,
+        'total_users': total_users,
+        'total_admins': total_admins,
+        'total_deposits': total_deposits,
+        'total_withdrawals': total_withdrawals,
+        'recent_transactions': recent_transactions,
+    }
+    return render(request, 'admin/revenue.html', context)

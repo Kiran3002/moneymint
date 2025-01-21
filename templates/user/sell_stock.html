@@ -10,7 +10,7 @@
                 <p><strong>Current Price:</strong> ₹{{ stock.latest_price|floatformat:2 }}</p>
                 <p><strong>Total Quantity Owned:</strong> {{ total_quantity }}</p>
             </div>
-            <form method="POST" action="">
+            <form method="post" >
                 {% csrf_token %}
                 <div class="mb-4">
                     <label for="quantity" class="form-label">Quantity to Sell:</label>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-money-bill-wave"></i> Sell Stock
+                        <i class="fas fa-wallet"></i> Sell Stock
                     </button>
                     <a href="{% url 'portfolio' %}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Back to Portfolio
