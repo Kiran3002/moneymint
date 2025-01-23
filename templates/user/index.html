@@ -12,16 +12,11 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        html, body {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            margin: 0;
-            background-image: url('/static/Images/Index1.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
+        body {
+            
+            background-image: url('/static/Images/Index1.jpg');  
+                background-size: cover; background-repeat: no-repeat; background-attachment: fixed; 
+                    background-position: center;
         }
 
         main {
@@ -72,18 +67,64 @@
             color: #f8d90f;
             text-decoration: underline;
         }
+        .card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .card{
+            height: 250px;
+            background-color: transparent !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
     <!-- Main Content -->
     <main>
-        <div class="wide-container py-5 Content">
+        <div class="container py-5 Content">
             <h1>Welcome to MoneyMint</h1>
-            <p>Your Gateway to Smarter Investments</p>
-            <a href="{% url 'stock_list' %}" class="btn btn-primary btn-lg">Start investing</a>
-            
+            <p>Your trusted stock broker platform.</p>
+            <a href="{% url 'stock_list' %}" class="btn btn-primary">Start investing</a>
+        </div>
+        <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{% url 'stock_list' %}" class="text-decoration-none">
+                        <div class="card p-4"  style="background-image: url(/static/Images/Stocks3.jpg); background-size: cover; background-repeat: no-repeat;">
+                            <h2 style="color: aliceblue; text-shadow: #000000;">Stocks</h2>
+                            <p  style="color: aliceblue; text-shadow: #000000;">Explore our curated list of top stocks to buy and seize your investment opportunities today!</p>
+                            <!-- <img src="/static/Images/Stocks2.jpg" alt="Stocks"> -->
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'portfolio' %}" class="text-decoration-none">
+                        <div class="card p-4"  style="background-image: url(/static/Images/Stocks2.jpg); background-size: cover; background-repeat: no-repeat;">
+                            <h2 style="color: aliceblue; text-shadow: #000000;">Portfolio</h2>
+                            <p  style="color: aliceblue; text-shadow: #000000;">View your portfolio to track your investments and monitor their performance in real-time!</p>
+                            <!-- <img src="/static/Images/Stocks2.jpg" alt="Stocks"> -->
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'payment' %}" class="text-decoration-none">
+                        <div class="card p-4"  style="background-image: url(/static/Images/payments1.jpg); background-size: cover; background-repeat: no-repeat;">
+                            <h2 style="color: aliceblue; text-shadow: #000000;">Funds</h2>
+                            <p  style="color: aliceblue; text-shadow: #000000;">Check your available funds to manage your investments and make informed trading decisions!</p>
+                            <!-- <img src="/static/Images/Stocks2.jpg" alt="Stocks"> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </main>
+
 
     <!-- Footer -->
     <footer class="bg-dark text-light py-5 ">
@@ -116,12 +157,14 @@
                 <div class="col-md-4 mb-4 text-md-end text-center">
                     <h5 class="text-uppercase fw-bold">Contact Us</h5>
                     <p class="mt-3">
-                        Email: <a href="mailto:support@moneymint.com" class="text-light text-decoration-none">support@moneymint.com</a><br>
-                        Phone: <a href="tel:+123456789" class="text-light text-decoration-none">+1 234 567 89</a>
+                        Email: <a href="mailto:kirankumar300213@gmail.com" class="text-light text-decoration-none">kirankumar300213@gmail.com</a><br>
+                        Phone: <a href="tel:+91 8660220771" class="text-light text-decoration-none">+91 8660220771</a>
                     </p>
-                    <p class="mt-3">&copy; 2025 MoneyMint. All rights reserved.</p>
+                    
                 </div>
+                <p class="mb-1">&copy; 2025 MoneyMint. All rights reserved.</p>
             </div>
+            
         </div>
     </footer>
 
